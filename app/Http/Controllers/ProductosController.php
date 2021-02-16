@@ -35,7 +35,7 @@ class ProductosController extends Controller
      */
     public function index()
     {
-        return view("productos.productos_index", ["productos" => Producto::all()]);
+        return view("productos.productos_index", ["productos" => Producto::paginate(8)]);
     }
 
     /**
@@ -59,6 +59,31 @@ class ProductosController extends Controller
         $producto = new Producto($request->input());
         $producto->saveOrFail();
         return redirect()->route("productos.index")->with("mensaje", "Producto guardado");
+    }
+    
+    public function buscarPorNombre(Request $request)
+    {
+        $nombre = $request->post("nomprod");
+        $productos = Producto::where('descripcion','LIKE','%'.$nombre.'%')->paginate(8);
+        if (!$productos) {
+            return redirect()
+                ->route("productos.index")
+                ->with("mensaje", "Producto no encontrado");
+        }
+        return view("productos.productos_index", ["productos" => $productos, "nomprod" => $nombre]);
+    }
+    
+    public function buscarProducto(Request $request)
+    {
+        $codigo = $request->post("codigo");
+        $producto = Producto::where("codigo_barras", "=", $codigo)->first();
+        if (!$producto) {
+            return redirect()
+                ->route("productos.index")
+                ->with("mensaje", "Producto no encontrado");
+        }
+        return redirect()
+            ->route("productos.edit",[$producto]);
     }
 
     /**

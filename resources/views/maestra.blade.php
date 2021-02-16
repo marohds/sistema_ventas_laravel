@@ -79,10 +79,10 @@
                     <a class="nav-link" href="{{ route('login') }}">Login</a>
                 </li>
 
-                <li class="nav-item">
+                {{--<li class="nav-item">
                     <a class="nav-link" href="{{ route('register') }}">
                         Registro
-                    </a>
+                    </a>--}}
                 </li>
             @else
                 <li class="nav-item">
