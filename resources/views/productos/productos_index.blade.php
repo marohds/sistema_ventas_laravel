@@ -28,33 +28,41 @@
                 <div class="col-4">
                     <form action="{{route("buscarProducto")}}" method="post">
                         @csrf
-                        <div class="form-group">
-                            <label for="codigo">Buscar por Código de barras</label>
+                        <label for="codigo">Buscar por Código de barras</label>
+                        <div class="input-group">
                             <input id="codigo" autocomplete="off" required autofocus name="codigo" type="text"
                                    class="form-control"
                                    placeholder="Código de barras">
-                            <button type="submit" class="btn btn-success">Enviar</button>
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-success" type="submit">Enviar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="col-4">
                     <form action="{{route("buscarPorNombre")}}" method="post">
                         @csrf
-                        <div class="form-group">
-                            <label for="codigo">Buscar por Nombre</label>
+                        <label for="nomprod">Buscar por Nombre</label>
+                        <div class="input-group">
                             <input id="nomprod" required autofocus name="nomprod" type="text"
                                    class="form-control"
                                    placeholder="Ingrese un nombre de producto o parte de él"
                                    value="{{ isset($nomprod) ? $nomprod : '' }}"
                                    >
-                            <button type="submit" class="btn btn-success">Enviar</button>
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-success" type="submit">Enviar</button>
+                            </div>
                             <a href="{{route("productos.index")}}" class="btn btn-warning">Limpiar</a>
                         </div>
                     </form>
                 </div>
             </div>
             @include("notificacion")
-            {{ $productos->links() }}
+            <div class="row mt-3">
+                <div class="col-12">
+                    {{ $productos->links() }}
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>

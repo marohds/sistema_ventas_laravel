@@ -27,6 +27,7 @@ Auth::routes([
 Route::get('/home', 'HomeController@index')->name('home');
 // Permitir logout con petición get
 Route::get("/logout", function () {
+    App\Providers\VentasServiceProvider::vaciarProductos();
     Auth::logout();
     return redirect()->route("home");
 })->name("logout");
@@ -42,6 +43,7 @@ Route::middleware("auth")
         Route::get("/ventas/ticket", "VentasController@ticket")->name("ventas.ticket");
         Route::resource("ventas", "VentasController");
         Route::get("/vender", "VenderController@index")->name("vender.index");
+        Route::post("/agregarVarios", "VenderController@agregarVarios")->name("agregarVarios");
         Route::post("/productoDeVenta", "VenderController@agregarProductoVenta")->name("agregarProductoVenta");
         Route::delete("/productoDeVenta", "VenderController@quitarProductoDeVenta")->name("quitarProductoDeVenta");
         Route::post("/terminarOCancelarVenta", "VenderController@terminarOCancelarVenta")->name("terminarOCancelarVenta");

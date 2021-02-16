@@ -27,10 +27,10 @@
         @include("notificacion")
         <form action="{{route("terminarOCancelarVenta")}}" method="post">
             @csrf
-            <div class="row align-items-center">
+            <div class="row align-items-end">
                 <div class="col-6">
-                    <div class="form-group">
-                        <label for="id_cliente">Cliente</label>
+                    <label for="id_cliente">Cliente</label>
+                    <div class="input-group">
                         <select required class="form-control" name="id_cliente" id="id_cliente">
                             @foreach($clientes as $cliente)
                             <option value="{{$cliente->id}}">{{$cliente->nombre}}</option>
@@ -39,15 +39,11 @@
                     </div>
                 </div>
                 @if(session("productos") !== null)
-                <div class="col-3">
-                    <div class="form-group">
-                        <button name="accion" value="terminar" type="submit" class="btn btn-success">Terminar
+                <div class="col-6">
+                    <div class="input-group">
+                        <button name="accion" value="terminar" type="submit" class="btn btn-success mr-5">Terminar
                             venta
                         </button>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="form-group">
                         <button name="accion" value="cancelar" type="submit" class="btn btn-danger">Cancelar
                             venta
                         </button>
@@ -57,20 +53,39 @@
             </div>
         </form>
         <div class="row align-items-center">
-            <div class="col-12 col-md-6">
+            <div class="col-4">
                 <form action="{{route("agregarProductoVenta")}}" method="post">
                     @csrf
-                    <div class="form-group">
-                        <label for="codigo">Código de barras</label>
+                    <label for="codigo">Código de barras</label>
+                    <div class="input-group">
                         <input id="codigo" autocomplete="off" required autofocus name="codigo" type="text"
                                class="form-control"
                                placeholder="Código de barras">
+                        <div class="input-group-append">
+                        <button class="btn btn-outline-success" type="submit">Agregar</button>
+                      </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+                <form action="{{route("agregarVarios")}}" method="post">
+                    @csrf
+                    <label for="varios">Agregar Importe por Varios</label>
+                    <div class="input-group">
+                        <input type="number" id="varios" class="form-control" required name="varios" min="0" value="0" step=".01" placeholder="Ingrese un importe">
+                        {{--<input id="varios" type="number" placeholder="0.00" required name="varios" min="0" value="0" step="0.01" title="Currency" 
+                               pattern="^\d+(?:\.\d{1,2})?$" 
+                               onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'red'">
+                            --}}
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-success" type="submit">Agregar</button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
         @if(session("productos") !== null)
-        <h2>Total: ${{number_format($total, 2)}}</h2>
+        <h2 class="mt-3">Total: ${{number_format($total, 2)}}</h2>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>

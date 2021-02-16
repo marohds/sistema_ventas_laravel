@@ -170,7 +170,7 @@
             
     @yield("contenido")
 </main>
-<footer class="px-2 py-2 fixed-bottom bg-dark">
+{{--<footer class="px-2 py-2 fixed-bottom bg-dark">
     <span class="text-muted">Punto de venta en Laravel
         <i class="fa fa-code text-white"></i>
         con
@@ -182,7 +182,7 @@
             <i class="fab fa-github"></i>
         </a>
     </span>
-</footer>
+</footer>--}}
 <script>
 $( document ).ready(function() {
     

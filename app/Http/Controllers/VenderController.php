@@ -28,6 +28,7 @@ use App\Producto;
 use App\ProductoVendido;
 use App\Venta;
 use Illuminate\Http\Request;
+use App\Providers\VentasServiceProvider;
 
 class VenderController extends Controller
 {
@@ -67,7 +68,7 @@ class VenderController extends Controller
             $productoActualizado->existencia -= $productoVendido->cantidad;
             $productoActualizado->saveOrFail();
         }
-        $this->vaciarProductos();
+        VentasServiceProvider::vaciarProductos();
         return redirect()
             ->route("ventas.show", $venta)
             ->with("mensaje", "Venta terminada");
@@ -80,22 +81,11 @@ class VenderController extends Controller
             $productos = [];
         }
         return $productos;
-    }
-
-    private function vaciarProductos()
-    {
-        $this->guardarProductos(null);
-    }
-
-    private function guardarProductos($productos)
-    {
-        session(["productos" => $productos,
-        ]);
-    }
+    }    
 
     public function cancelarVenta()
     {
-        $this->vaciarProductos();
+        VentasServiceProvider::vaciarProductos();
         return redirect()
             ->route("vender.index")
             ->with("mensaje", "Venta cancelada");
@@ -106,7 +96,26 @@ class VenderController extends Controller
         $indice = $request->post("indice");
         $productos = $this->obtenerProductos();
         array_splice($productos, $indice, 1);
-        $this->guardarProductos($productos);
+        VentasServiceProvider::guardarProductos($productos);
+        return redirect()
+            ->route("vender.index");
+    }
+    
+    public function agregarVarios(Request $request)
+    {
+        $importe = $request->post("varios");
+        $producto = Producto::where("codigo_barras", "=", 1)->first();
+        if (!$producto) {
+            $producto = new Producto();
+            $producto->codigo_barras = 1;
+            $producto->descripcion = "Varios";
+            $producto->precio_compra = 0;
+            $producto->precio_venta = 0;
+            $producto->existencia = 9999999;
+            $producto->saveOrFail();
+        }
+        $producto->precio_venta = (float)$importe;
+        $this->agregarProductoACarrito($producto);
         return redirect()
             ->route("vender.index");
     }
@@ -127,30 +136,33 @@ class VenderController extends Controller
 
     private function agregarProductoACarrito($producto)
     {
-        if ($producto->existencia <= 0) {
-            return redirect()->route("vender.index")
-                ->with([
-                    "mensaje" => "No hay existencias del producto",
-                    "tipo" => "danger"
-                ]);
-        }
+//        if ($producto->existencia <= 0) {
+//            return redirect()->route("vender.index")
+//                ->with([
+//                    "mensaje" => "No hay existencias del producto",
+//                    "tipo" => "danger"
+//                ]);
+//        }
         $productos = $this->obtenerProductos();
-        $posibleIndice = $this->buscarIndiceDeProducto($producto->codigo_barras, $productos);
+        $posibleIndice = -1;
+        if ($producto->codigo_barras != "1") {
+            $posibleIndice = $this->buscarIndiceDeProducto($producto->codigo_barras, $productos);
+        }
         // Es decir, producto no fue encontrado
         if ($posibleIndice === -1) {
             $producto->cantidad = 1;
             array_push($productos, $producto);
         } else {
-            if ($productos[$posibleIndice]->cantidad + 1 > $producto->existencia) {
-                return redirect()->route("vender.index")
-                    ->with([
-                        "mensaje" => "No se pueden agregar más productos de este tipo, se quedarían sin existencia",
-                        "tipo" => "danger"
-                    ]);
-            }
+//            if ($productos[$posibleIndice]->cantidad + 1 > $producto->existencia) {
+//                return redirect()->route("vender.index")
+//                    ->with([
+//                        "mensaje" => "No se pueden agregar más productos de este tipo, se quedarían sin existencia",
+//                        "tipo" => "danger"
+//                    ]);
+//            }
             $productos[$posibleIndice]->cantidad++;
         }
-        $this->guardarProductos($productos);
+        VentasServiceProvider::guardarProductos($productos);
     }
 
     private function buscarIndiceDeProducto(string $codigo, array &$productos)
