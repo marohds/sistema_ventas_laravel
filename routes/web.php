@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+//Auth::routes([
+//  'register' => false, // Register Routes...
+//  'reset' => false, // Reset Password Routes...
+//  'verify' => false, // Email Verification Routes...
+//]);
 
 Route::get('/', function () {
     return redirect()->route("home");
@@ -16,6 +21,7 @@ Route::get("/soporte", function(){
 
 Auth::routes([
     "reset" => false,// no pueden olvidar contraseña
+    'register' => false, // no permito registro
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -21,17 +21,32 @@
 @extends("maestra")
 @section("titulo", "Detalle de venta ")
 @section("contenido")
+
+<textarea type="textarea" id="message" rows="20" cols="40" style="display:none;">{{$ticketJson}}</textarea>
+            
     <div class="row">
         <div class="col-12">
             <h1>Detalle de venta #{{$venta->id}}</h1>
             <h1>Cliente: <small>{{$venta->cliente->nombre}}</small></h1>
             @include("notificacion")
-            <a class="btn btn-info" href="{{route("ventas.index")}}">
-                <i class="fa fa-arrow-left"></i>&nbsp;Volver
-            </a>
-            <a class="btn btn-success" href="{{route("ventas.ticket", ["id" => $venta->id])}}">
-                <i class="fa fa-print"></i>&nbsp;Ticket
-            </a>
+            <div class="row">
+                <div class="col-4">
+                    <a class="btn btn-info" href="{{route("ventas.index")}}">
+                        <i class="fa fa-arrow-left"></i>&nbsp;Volver
+                    </a>
+                </div>
+                <div class="col-4">
+                    <a class="btn btn-success" id="btnSend" href="">
+                        <i class="fa fa-print"></i>&nbsp;Imprimir Ticket
+                    </a>
+                    <a class="btn btn-info" href="{{route("vender.index")}}">
+                        <i class="fa fa-arrow-up"></i>&nbsp;Nueva Venta
+                    </a>
+                    
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
             <h2>Productos</h2>
             <table class="table table-bordered">
                 <thead>

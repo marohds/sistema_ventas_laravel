@@ -21,9 +21,13 @@
 @extends("maestra")
 @section("titulo", "Ventas")
 @section("contenido")
+<textarea type="textarea" id="message" rows="20" cols="40" style="display:none;">{{$cierreZJson}}</textarea>
     <div class="row">
         <div class="col-12">
             <h1>Ventas <i class="fa fa-list"></i></h1>
+            <a class="btn btn-info" id="btnSend" href="#">
+                Cierre Z <i class="fa fa-print"></i>
+            </a>
             @include("notificacion")
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -32,7 +36,7 @@
                         <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Total</th>
-                        <th>Ticket de venta</th>
+                        {{--<th>Ticket de venta</th>--}}
                         <th>Detalles</th>
                         <th>Eliminar</th>
                     </tr>
@@ -43,11 +47,11 @@
                             <td>{{$venta->created_at}}</td>
                             <td>{{$venta->cliente->nombre}}</td>
                             <td>${{number_format($venta->total, 2)}}</td>
-                            <td>
+                            {{--<td>
                                 <a class="btn btn-info" href="{{route("ventas.ticket", ["id"=>$venta->id])}}">
                                     <i class="fa fa-print"></i>
                                 </a>
-                            </td>
+                            </td>--}}
                             <td>
                                 <a class="btn btn-success" href="{{route("ventas.show", $venta)}}">
                                     <i class="fa fa-info"></i>
