@@ -29,6 +29,11 @@
                 Cierre Z <i class="fa fa-print"></i>
             </a>
             @include("notificacion")
+            <div class="row mt-3">
+                <div class="col-12">
+                    {{ $ventas->links() }}
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>

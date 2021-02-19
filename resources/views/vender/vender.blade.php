@@ -118,7 +118,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(session("productos") as $producto)
+                    @foreach(array_reverse(session("productos")) as $producto)
                     <tr>
                         <td>{{$producto->codigo_barras}}</td>
                         <td>{{$producto->descripcion}}</td>
