@@ -56,8 +56,16 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'codigo_barras' => 'required|max:255',
+            'descripcion' => 'required|max:255',
+            'precio_compra' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+            'precio_venta' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+            'existencia' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+            'iva' => 'required|numeric|min:0|max:100',
+        ]);
         $producto = new Producto($request->input());
-        $producto->saveOrFail();
+        $producto->save();
         return redirect()->route("productos.index")->with("mensaje", "Producto guardado");
     }
     
@@ -118,8 +126,17 @@ class ProductosController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
+        $request->validate([
+            'codigo_barras' => 'required|max:255',
+            'descripcion' => 'required|max:255',
+            'precio_compra' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+            'precio_venta' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+            'existencia' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+            'iva' => 'required|numeric|min:0|max:100',
+        ]);
+        
         $producto->fill($request->input());
-        $producto->saveOrFail();
+        $producto->save();
         return redirect()->route("productos.index")->with("mensaje", "Producto actualizado");
     }
 

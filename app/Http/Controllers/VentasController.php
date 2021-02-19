@@ -56,7 +56,7 @@ class VentasController extends Controller
         
         foreach ($venta->productos as $producto) {
             $item = new \stdClass();
-            $item->alic_iva = 21;
+            $item->alic_iva = $producto->iva;
             $item->importe = (float) $producto->precio;
             $item->ds = $producto->descripcion;
             $item->qty = (float) $producto->cantidad;
@@ -138,7 +138,7 @@ class VentasController extends Controller
         
         foreach ($venta->productos as $producto) {
             $item = new \stdClass();
-            $item->alic_iva = 21;
+            $item->alic_iva = $producto->iva;
             $item->importe = (float) $producto->precio;
             $item->ds = $producto->descripcion;
             $item->qty = (float) $producto->cantidad;

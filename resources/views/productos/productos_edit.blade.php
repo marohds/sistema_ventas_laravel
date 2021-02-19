@@ -21,6 +21,7 @@
 @extends("maestra")
 @section("titulo", "Editar producto")
 @section("contenido")
+
     <div class="row">
         <div class="col-12">
             <h1>Editar producto</h1>
@@ -38,6 +39,11 @@
                     <input required value="{{$producto->descripcion}}" autocomplete="off" name="descripcion"
                            class="form-control"
                            type="text" placeholder="Descripción">
+                </div>
+                <div class="form-group">
+                    <label class="label">IVA</label>
+                    <input type="number" id="iva" class="form-control" required name="iva" 
+                           min="0" value="{{$producto->iva}}" step=".01" placeholder="Ingrese un importe">
                 </div>
                 <div class="form-group">
                     <label class="label">Precio de compra</label>

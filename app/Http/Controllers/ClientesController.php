@@ -35,6 +35,11 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nombre' => 'required|max:255',
+            'telefono' => 'required|max:255',
+        ]);
+        
         (new Cliente($request->input()))->saveOrFail();
         return redirect()->route("clientes.index")->with("mensaje", "Cliente agregado");
     }

@@ -44,6 +44,8 @@ Route::middleware("auth")
         Route::resource("ventas", "VentasController");
         Route::get("/vender", "VenderController@index")->name("vender.index");
         Route::post("/agregarVarios", "VenderController@agregarVarios")->name("agregarVarios");
+        Route::post("/agregarCarniceria", "VenderController@agregarCarniceria")->name("agregarCarniceria");
+        Route::post("/agregarFiambre", "VenderController@agregarFiambre")->name("agregarFiambre");
         Route::post("/productoDeVenta", "VenderController@agregarProductoVenta")->name("agregarProductoVenta");
         Route::delete("/productoDeVenta", "VenderController@quitarProductoDeVenta")->name("quitarProductoDeVenta");
         Route::post("/terminarOCancelarVenta", "VenderController@terminarOCancelarVenta")->name("terminarOCancelarVenta");

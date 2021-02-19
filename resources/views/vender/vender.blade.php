@@ -52,11 +52,11 @@
                 @endif
             </div>
         </form>
-        <div class="row align-items-center">
+        <div class="row align-items-center mt-3">
             <div class="col-4">
                 <form action="{{route("agregarProductoVenta")}}" method="post">
                     @csrf
-                    <label for="codigo">Código de barras</label>
+                    <label for="codigo"><b>Código de barras</b></label>
                     <div class="input-group">
                         <input id="codigo" autocomplete="off" required autofocus name="codigo" type="text"
                                class="form-control"
@@ -67,16 +67,36 @@
                     </div>
                 </form>
             </div>
-            <div class="col-4">
+            <div class="col-2">
                 <form action="{{route("agregarVarios")}}" method="post">
                     @csrf
-                    <label for="varios">Agregar Importe por Varios</label>
+                    <label for="varios">Importe <b>Varios</b></label>
                     <div class="input-group">
                         <input type="number" id="varios" class="form-control" required name="varios" min="0" value="0" step=".01" placeholder="Ingrese un importe">
-                        {{--<input id="varios" type="number" placeholder="0.00" required name="varios" min="0" value="0" step="0.01" title="Currency" 
-                               pattern="^\d+(?:\.\d{1,2})?$" 
-                               onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'red'">
-                            --}}
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-success" type="submit">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-2">
+                <form action="{{route("agregarCarniceria")}}" method="post">
+                    @csrf
+                    <label for="varios">Importe <b>Carnicería</b></label>
+                    <div class="input-group">
+                        <input type="number" id="carniceria" class="form-control" required name="carniceria" min="0" value="0" step=".01" placeholder="Ingrese un importe">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-success" type="submit">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-2">
+                <form action="{{route("agregarFiambre")}}" method="post">
+                    @csrf
+                    <label for="varios">Importe <b>Fiambres</b></label>
+                    <div class="input-group">
+                        <input type="number" id="fiambre" class="form-control" required name="fiambre" min="0" value="0" step=".01" placeholder="Ingrese un importe">
                         <div class="input-group-append">
                           <button class="btn btn-outline-success" type="submit">Agregar</button>
                         </div>

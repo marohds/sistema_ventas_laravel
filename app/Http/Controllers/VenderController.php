@@ -60,6 +60,7 @@ class VenderController extends Controller
                 "codigo_barras" => $producto->codigo_barras,
                 "precio" => $producto->precio_venta,
                 "cantidad" => $producto->cantidad,
+                "iva"=>$producto->iva,
             ]);
             // Lo guardamos
             $productoVendido->saveOrFail();
@@ -112,6 +113,47 @@ class VenderController extends Controller
             $producto->precio_compra = 0;
             $producto->precio_venta = 0;
             $producto->existencia = 9999999;
+            $producto->iva = 21.00;
+            $producto->saveOrFail();
+        }
+        $producto->precio_venta = (float)$importe;
+        $this->agregarProductoACarrito($producto);
+        return redirect()
+            ->route("vender.index");
+    }
+    
+    public function agregarCarniceria(Request $request)
+    {
+        $importe = $request->post("carniceria");
+        $producto = Producto::where("codigo_barras", "=", 2)->first();
+        if (!$producto) {
+            $producto = new Producto();
+            $producto->codigo_barras = 2;
+            $producto->descripcion = "Carniceria";
+            $producto->precio_compra = 0;
+            $producto->precio_venta = 0;
+            $producto->existencia = 9999999;
+            $producto->iva = 21.00;
+            $producto->saveOrFail();
+        }
+        $producto->precio_venta = (float)$importe;
+        $this->agregarProductoACarrito($producto);
+        return redirect()
+            ->route("vender.index");
+    }
+    
+    public function agregarFiambre(Request $request)
+    {
+        $importe = $request->post("fiambre");
+        $producto = Producto::where("codigo_barras", "=", 3)->first();
+        if (!$producto) {
+            $producto = new Producto();
+            $producto->codigo_barras = 3;
+            $producto->descripcion = "Fiambre";
+            $producto->precio_compra = 0;
+            $producto->precio_venta = 0;
+            $producto->existencia = 9999999;
+            $producto->iva = 21.00;
             $producto->saveOrFail();
         }
         $producto->precio_venta = (float)$importe;
@@ -145,7 +187,8 @@ class VenderController extends Controller
 //        }
         $productos = $this->obtenerProductos();
         $posibleIndice = -1;
-        if ($producto->codigo_barras != "1") {
+        //Varios / Carniceria /Fiambre
+        if ($producto->codigo_barras != "1" && $producto->codigo_barras != "2" && $producto->codigo_barras != "3") {
             $posibleIndice = $this->buscarIndiceDeProducto($producto->codigo_barras, $productos);
         }
         // Es decir, producto no fue encontrado

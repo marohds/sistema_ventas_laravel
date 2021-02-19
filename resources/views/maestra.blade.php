@@ -64,7 +64,7 @@
         }
     </style>
 </head>
-<body>
+<body style="font-size: large;">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     {{--<a class="navbar-brand" target="_blank" href="//parzibyte.me/blog">{{env("APP_NAME")}}</a>--}}
     <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -167,7 +167,15 @@
                     </div>
                 </div>
             </div>
-            
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @yield("contenido")
 </main>
 {{--<footer class="px-2 py-2 fixed-bottom bg-dark">
