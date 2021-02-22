@@ -22,30 +22,42 @@
 @section("titulo", "Realizar venta")
 @section("contenido")
 
-
+{{ URL::asset('css/custom.css') }} 
 <div class="row">
-    <div class="col-6">
+    @include("notificacion")
+    <div class="col-3">
         <h1>Nueva venta <i class="fa fa-cart-plus"></i></h1>
     </div>
     <div class="col-6">
+        <div class="row">
+            <div class="col-6 m-auto">
+            <b>Bultos:</b><br />
+            <div style="font-size: 48px; text-align: center;"><b>{{number_format($bultos, 0)}}</b></div>
+        </div>
+        <div class="col-6 m-auto" style="background-color: gold">
+            <b>Total Compra:</b><br />
+            <div style="font-size: 48px; text-align: center;"><b>$ {{number_format($total, 2)}}</b></div>
+        </div>
+        </div>
+    </div>
+    <div class="col-3">
         <form action="{{route("terminarOCancelarVenta")}}" method="post">
             @csrf
             <label for="id_cliente"><b>Cliente</b></label>
             <div class="input-group">
-                <select required class="form-control mr-5" name="id_cliente" id="id_cliente">
+                <select required class="form-control" name="id_cliente" id="id_cliente">
                     @foreach($clientes as $cliente)
                     <option value="{{$cliente->id}}">{{$cliente->nombre}}</option>
                     @endforeach
                 </select>
-                @if(session("productos") !== null)
-                <div class="input-group-append mr-5">
-                    <button name="accion" value="terminar" type="submit" class="btn btn-success mr-5">Terminar Venta</button>
-                </div>
-                <div class="input-group-append mr-5">
-                    <button name="accion" value="cancelar" type="submit" class="btn btn-danger">Cancelar Venta</button>
-                </div>
-                @endif
+                
             </div>
+            @if(session("productos") !== null)
+            <div class="float-right mt-1">
+                <button name="accion" value="terminar" type="submit" class="btn btn-success mr-5">Terminar Venta</button>
+                <button name="accion" value="cancelar" type="submit" class="btn btn-danger">Cancelar Venta</button>
+            </div>
+            @endif
             {{--@if(session("productos") !== null)
                 <div class="col-6">
                     <div class="input-group">
@@ -61,12 +73,9 @@
         </form>
     </div>
 </div>
-@include("notificacion")
-<div class="row mt-3">
-    <div class="col-6 align-items-center">
-        <div class="row">
-            <div class="col-12">
-                <form action="{{route("agregarProductoVenta")}}" method="post">
+<div class="row">
+    <div class="col-3">
+        <form action="{{route("agregarProductoVenta")}}" method="post">
                     @csrf
                     <label for="codigo"><b>Código de barras [Tecla B]</b></label>
                     <div class="input-group">
@@ -78,11 +87,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-4">
-                <form action="{{route("agregarVarios")}}" method="post">
+        <form action="{{route("agregarVarios")}}" method="post">
                     @csrf
                     <label for="varios">Importe <b>Varios [Tecla X]</b></label>
                     <div class="input-group">
@@ -92,9 +97,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="col-4">
-                <form action="{{route("agregarCarniceria")}}" method="post">
+        <form action="{{route("agregarCarniceria")}}" method="post">
                     @csrf
                     <label for="varios">Importe <b>Carnicería [Tecla C]</b></label>
                     <div class="input-group">
@@ -104,9 +107,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="col-4">
-                <form action="{{route("agregarFiambre")}}" method="post">
+        <form action="{{route("agregarFiambre")}}" method="post">
                     @csrf
                     <label for="varios">Importe <b>Fiambres [Tecla F]</b></label>
                     <div class="input-group">
@@ -116,44 +117,29 @@
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
     </div>
-    <div class="col-6 align-items-center">
-        <div class="row">
-            <div class="col-6 m-auto">
-                <b>Bultos:</b><br />
-                <div style="font-size: 72px; text-align: center;"><b>{{number_format($bultos, 0)}}</b></div>
-            </div>
-            <div class="col-6 m-auto" style="background-color: gold">
-                <b>Total Compra:</b><br />
-                <div style="font-size: 72px; text-align: center;"><b>$ {{number_format($total, 2)}}</b></div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col-12">
+    <div class="col-9">
+        <div class="col-12 mt-3">
         @if(session("productos") !== null)
-        <div class="table-responsive" style="font-size: large;">
-            <table class="table table-bordered">
+        <div class="table-responsive">
+            <table class="table table-bordered table-vender">
                 <thead>
                     <tr>
-                        <th>Código de barras</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Quitar</th>
+                        <th style="padding: 0.3rem !important; vertical-align: initial !important;">Código de barras</th>
+                        <th style="padding: 0.3rem !important; vertical-align: initial !important;">Descripción</th>
+                        <th style="padding: 0.3rem !important; vertical-align: initial !important;">Precio</th>
+                        <th style="padding: 0.3rem !important; vertical-align: initial !important;">Cantidad</th>
+                        <th style="padding: 0.3rem !important; vertical-align: initial !important;">Quitar</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(array_reverse(session("productos")) as $producto)
                     <tr>
-                        <td>{{$producto->codigo_barras}}</td>
-                        <td>{{$producto->descripcion}}</td>
-                        <td>${{number_format($producto->precio_venta, 2)}}</td>
-                        <td>{{$producto->cantidad}}</td>
-                        <td>
+                        <td style="padding: 0.3rem !important; vertical-align: initial !important;">{{$producto->codigo_barras}}</td>
+                        <td style="padding: 0.3rem !important; vertical-align: initial !important;">{{$producto->descripcion}}</td>
+                        <td style="padding: 0.3rem !important; vertical-align: initial !important;">${{number_format($producto->precio_venta, 2)}}</td>
+                        <td style="padding: 0.3rem !important; vertical-align: initial !important;">{{$producto->cantidad}}</td>
+                        <td style="padding: 0.3rem !important; vertical-align: initial !important;">
                             <form action="{{route("quitarProductoDeVenta")}}" method="post">
                                 @method("delete")
                                 @csrf
@@ -173,6 +159,7 @@
             <br>
             Escanea el código de barras o escribe y presiona Enter</h2>
         @endif
+    </div>
     </div>
 </div>
 <script>  
