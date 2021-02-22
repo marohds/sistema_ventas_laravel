@@ -37,6 +37,11 @@
                            type="text" placeholder="Descripción">
                 </div>
                 <div class="form-group">
+                    <label class="label">IVA</label>
+                    <input type="number" id="iva" class="form-control" required name="iva" 
+                           min="0" value="21" step=".01" placeholder="Ingrese un importe">
+                </div>
+                <div class="form-group">
                     <label class="label">Precio de compra</label>
                     <input required autocomplete="off" name="precio_compra" class="form-control"
                            type="decimal(9,2)" placeholder="Precio de compra">
