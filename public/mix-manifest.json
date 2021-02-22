@@ -1,5 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/js/fiscalberry.js": "/js/fiscalberry.js"
+    "/js/jquery-3.5.1.min.js": "/js/jquery-3.5.1.min.js",
+    "/js/fiscalberry.js": "/js/fiscalberry.js",
+    "/js/popper.min.js": "/js/popper.min.js",
+    "/js/bootstrap.min.js": "/js/bootstrap.min.js"
 }
