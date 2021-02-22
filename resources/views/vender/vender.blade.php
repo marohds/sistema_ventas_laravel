@@ -21,24 +21,32 @@
 @extends("maestra")
 @section("titulo", "Realizar venta")
 @section("contenido")
+
+
 <div class="row">
-    <div class="col-12">
+    <div class="col-6">
         <h1>Nueva venta <i class="fa fa-cart-plus"></i></h1>
-        @include("notificacion")
+    </div>
+    <div class="col-6">
         <form action="{{route("terminarOCancelarVenta")}}" method="post">
             @csrf
-            <div class="row align-items-end">
-                <div class="col-6">
-                    <label for="id_cliente">Cliente</label>
-                    <div class="input-group">
-                        <select required class="form-control" name="id_cliente" id="id_cliente">
-                            @foreach($clientes as $cliente)
-                            <option value="{{$cliente->id}}">{{$cliente->nombre}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+            <label for="id_cliente"><b>Cliente</b></label>
+            <div class="input-group">
+                <select required class="form-control mr-5" name="id_cliente" id="id_cliente">
+                    @foreach($clientes as $cliente)
+                    <option value="{{$cliente->id}}">{{$cliente->nombre}}</option>
+                    @endforeach
+                </select>
                 @if(session("productos") !== null)
+                <div class="input-group-append mr-5">
+                    <button name="accion" value="terminar" type="submit" class="btn btn-success mr-5">Terminar Venta</button>
+                </div>
+                <div class="input-group-append mr-5">
+                    <button name="accion" value="cancelar" type="submit" class="btn btn-danger">Cancelar Venta</button>
+                </div>
+                @endif
+            </div>
+            {{--@if(session("productos") !== null)
                 <div class="col-6">
                     <div class="input-group">
                         <button name="accion" value="terminar" type="submit" class="btn btn-success mr-5">Terminar
@@ -49,64 +57,85 @@
                         </button>
                     </div>
                 </div>
-                @endif
-            </div>
+                @endif--}}
         </form>
-        <div class="row align-items-center mt-3">
-            <div class="col-4">
+    </div>
+</div>
+@include("notificacion")
+<div class="row mt-3">
+    <div class="col-6 align-items-center">
+        <div class="row">
+            <div class="col-12">
                 <form action="{{route("agregarProductoVenta")}}" method="post">
                     @csrf
-                    <label for="codigo"><b>Código de barras</b></label>
+                    <label for="codigo"><b>Código de barras [Tecla B]</b></label>
                     <div class="input-group">
                         <input id="codigo" autocomplete="off" required autofocus name="codigo" type="text"
                                class="form-control"
                                placeholder="Código de barras">
                         <div class="input-group-append">
-                        <button class="btn btn-outline-success" type="submit">Agregar</button>
-                      </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-2">
-                <form action="{{route("agregarVarios")}}" method="post">
-                    @csrf
-                    <label for="varios">Importe <b>Varios</b></label>
-                    <div class="input-group">
-                        <input type="number" id="varios" class="form-control" required name="varios" min="0" value="0" step=".01" placeholder="Ingrese un importe">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-success" type="submit">Agregar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-2">
-                <form action="{{route("agregarCarniceria")}}" method="post">
-                    @csrf
-                    <label for="varios">Importe <b>Carnicería</b></label>
-                    <div class="input-group">
-                        <input type="number" id="carniceria" class="form-control" required name="carniceria" min="0" value="0" step=".01" placeholder="Ingrese un importe">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-success" type="submit">Agregar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-2">
-                <form action="{{route("agregarFiambre")}}" method="post">
-                    @csrf
-                    <label for="varios">Importe <b>Fiambres</b></label>
-                    <div class="input-group">
-                        <input type="number" id="fiambre" class="form-control" required name="fiambre" min="0" value="0" step=".01" placeholder="Ingrese un importe">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-success" type="submit">Agregar</button>
+                            <button class="btn btn-outline-success" type="submit">Agregar</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+        <div class="row mt-2">
+            <div class="col-4">
+                <form action="{{route("agregarVarios")}}" method="post">
+                    @csrf
+                    <label for="varios">Importe <b>Varios [Tecla X]</b></label>
+                    <div class="input-group">
+                        <input type="decimal(9,2)" id="varios" class="form-control" required name="varios" min="0" value="0" step=".01" placeholder="Ingrese un importe">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+                <form action="{{route("agregarCarniceria")}}" method="post">
+                    @csrf
+                    <label for="varios">Importe <b>Carnicería [Tecla C]</b></label>
+                    <div class="input-group">
+                        <input type="decimal(9,2)" id="carniceria" class="form-control" required name="carniceria" min="0" value="0" step=".01" placeholder="Ingrese un importe">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+                <form action="{{route("agregarFiambre")}}" method="post">
+                    @csrf
+                    <label for="varios">Importe <b>Fiambres [Tecla F]</b></label>
+                    <div class="input-group">
+                        <input type="decimal(9,2)" id="fiambre" class="form-control" required name="fiambre" min="0" value="0" step=".01" placeholder="Ingrese un importe">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 align-items-center">
+        <div class="row">
+            <div class="col-6 m-auto">
+                <b>Bultos:</b><br />
+                <div style="font-size: 72px; text-align: center;"><b>{{number_format($bultos, 0)}}</b></div>
+            </div>
+            <div class="col-6 m-auto" style="background-color: gold">
+                <b>Total Compra:</b><br />
+                <div style="font-size: 72px; text-align: center;"><b>$ {{number_format($total, 2)}}</b></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-12">
         @if(session("productos") !== null)
-        <h2 class="mt-3">Total: ${{number_format($total, 2)}}</h2>
-        <div class="table-responsive">
+        <div class="table-responsive" style="font-size: large;">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -129,7 +158,7 @@
                                 @method("delete")
                                 @csrf
                                 <input type="hidden" name="indice" value="{{$loop->index}}">
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-danger btn-sm">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </form>
@@ -146,4 +175,41 @@
         @endif
     </div>
 </div>
+<script>  
+    focusConTecla = function(cid) {
+        $("#codigo").val('');
+        $("#carniceria").val('');
+        $("#fiambre").val('');
+        $("#varios").val('');
+        $("#" + cid).focus();
+    }
+ 
+    $(document).on('keydown', function (e) {
+       var keycode = (event.keyCode ? event.keyCode : event.which);
+        //B - Codigo de Barras
+        if (keycode == '66') {
+            focusConTecla("codigo");
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        //C - Carnicería
+        if (keycode == '67') {
+            focusConTecla("carniceria");
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        //F - Fiambres
+        if (keycode == '70') {
+            focusConTecla("fiambre");
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        //X - Varios
+        if (keycode == '88') {
+            focusConTecla("varios");
+            event.preventDefault();
+            event.stopPropagation();
+        }
+   });
+</script>
 @endsection

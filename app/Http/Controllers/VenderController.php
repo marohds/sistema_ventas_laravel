@@ -104,6 +104,9 @@ class VenderController extends Controller
     
     public function agregarVarios(Request $request)
     {
+        $request->validate([
+            'varios' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+        ]);
         $importe = $request->post("varios");
         $producto = Producto::where("codigo_barras", "=", 1)->first();
         if (!$producto) {
@@ -124,6 +127,9 @@ class VenderController extends Controller
     
     public function agregarCarniceria(Request $request)
     {
+        $request->validate([
+            'carniceria' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+        ]);
         $importe = $request->post("carniceria");
         $producto = Producto::where("codigo_barras", "=", 2)->first();
         if (!$producto) {
@@ -144,6 +150,9 @@ class VenderController extends Controller
     
     public function agregarFiambre(Request $request)
     {
+        $request->validate([
+            'fiambre' => 'required|numeric|min:0|max:9999999.99|not_in:0',
+        ]);
         $importe = $request->post("fiambre");
         $producto = Producto::where("codigo_barras", "=", 3)->first();
         if (!$producto) {
@@ -164,6 +173,9 @@ class VenderController extends Controller
 
     public function agregarProductoVenta(Request $request)
     {
+        $request->validate([
+            'codigo' => 'required|numeric|not_in:0',
+        ]);
         $codigo = $request->post("codigo");
         $producto = Producto::where("codigo_barras", "=", $codigo)->first();
         if (!$producto) {
@@ -226,12 +238,15 @@ class VenderController extends Controller
     public function index()
     {
         $total = 0;
+        $bultos = 0;
         foreach ($this->obtenerProductos() as $producto) {
             $total += $producto->cantidad * $producto->precio_venta;
+            $bultos += $producto->cantidad;
         }
         return view("vender.vender",
             [
                 "total" => $total,
+                "bultos" => $bultos,
                 "clientes" => Cliente::all(),
             ]);
     }

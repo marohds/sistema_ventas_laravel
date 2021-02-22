@@ -64,7 +64,7 @@
         }
     </style>
 </head>
-<body style="font-size: large;">
+<body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     {{--<a class="navbar-brand" target="_blank" href="//parzibyte.me/blog">{{env("APP_NAME")}}</a>--}}
     <button class="navbar-toggler" type="button" data-toggle="collapse"
