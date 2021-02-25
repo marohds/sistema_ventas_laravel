@@ -21,8 +21,6 @@
 @extends("maestra")
 @section("titulo", "Realizar venta")
 @section("contenido")
-
-{{ URL::asset('css/custom.css') }} 
 <div class="row">
     @include("notificacion")
     <div class="col-3">

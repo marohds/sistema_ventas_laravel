@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use App\Providers\VentasServiceProvider;
 
 class VentasController extends Controller
 {
@@ -58,7 +59,7 @@ class VentasController extends Controller
             $item = new \stdClass();
             $item->alic_iva = $producto->iva;
             $item->importe = (float) $producto->precio;
-            $item->ds = $producto->descripcion;
+            $item->ds = VentasServiceProvider::remove_accents($producto->descripcion);
             $item->qty = (float) $producto->cantidad;
             $obj->printTicket->items[] = $item;
         }
@@ -141,7 +142,7 @@ class VentasController extends Controller
             $item = new \stdClass();
             $item->alic_iva = $producto->iva;
             $item->importe = (float) $producto->precio;
-            $item->ds = $producto->descripcion;
+            $item->ds = VentasServiceProvider::remove_accents($producto->descripcion);
             $item->qty = (float) $producto->cantidad;
             $obj->printTicket->items[] = $item;
         }
