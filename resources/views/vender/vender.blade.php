@@ -21,8 +21,8 @@
 @extends("maestra")
 @section("titulo", "Realizar venta")
 @section("contenido")
+@include("notificacion")
 <div class="row">
-    @include("notificacion")
     <div class="col-3">
         <h1>Nueva venta <i class="fa fa-cart-plus"></i></h1>
     </div>
@@ -141,7 +141,7 @@
                             <form action="{{route("quitarProductoDeVenta")}}" method="post">
                                 @method("delete")
                                 @csrf
-                                <input type="hidden" name="indice" value="{{$loop->index}}">
+                                <input type="hidden" name="indice" value="{{$producto->indice}}">
                                 <button type="submit" class="btn btn-danger btn-sm">
                                     <i class="fa fa-trash"></i>
                                 </button>

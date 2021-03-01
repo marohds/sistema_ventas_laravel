@@ -32,6 +32,9 @@ use App\Providers\VentasServiceProvider;
 
 class VenderController extends Controller
 {
+    
+    private $total = 0;
+    private $bultos = 0;
 
     public function terminarOCancelarVenta(Request $request)
     {
@@ -49,7 +52,7 @@ class VenderController extends Controller
         $venta->id_cliente = $request->input("id_cliente");
         $venta->saveOrFail();
         $idVenta = $venta->id;
-        $productos = $this->obtenerProductos();
+        $productos = $this->obtenerProductosCarrito();
         // Recorrer carrito de compras
         foreach ($productos as $producto) {
             // El producto que se vende...
@@ -75,7 +78,7 @@ class VenderController extends Controller
             ->with("mensaje", "Venta terminada");
     }
 
-    private function obtenerProductos()
+    private function obtenerProductosCarrito()
     {
         $productos = session("productos");
         if (!$productos) {
@@ -95,11 +98,16 @@ class VenderController extends Controller
     public function quitarProductoDeVenta(Request $request)
     {
         $indice = $request->post("indice");
-        $productos = $this->obtenerProductos();
-        array_splice($productos, $indice, 1);
-        VentasServiceProvider::guardarProductos($productos);
-        return redirect()
-            ->route("vender.index");
+        $productos = $this->obtenerProductosCarrito();
+        //array_splice($productos, $indice, 1);
+        $this->quitarProductoDelCarrito($indice, $productos);
+        $this->calcularTotales();
+        return view("vender.vender",
+            [
+                "total" => $this->total,
+                "bultos" => $this->bultos,
+                "clientes" => Cliente::all(),
+            ]);
     }
     
     public function agregarVarios(Request $request)
@@ -121,8 +129,13 @@ class VenderController extends Controller
         }
         $producto->precio_venta = (float)$importe;
         $this->agregarProductoACarrito($producto);
-        return redirect()
-            ->route("vender.index");
+        $this->calcularTotales();
+        return view("vender.vender",
+            [
+                "total" => $this->total,
+                "bultos" => $this->bultos,
+                "clientes" => Cliente::all(),
+            ]);
     }
     
     public function agregarCarniceria(Request $request)
@@ -144,8 +157,13 @@ class VenderController extends Controller
         }
         $producto->precio_venta = (float)$importe;
         $this->agregarProductoACarrito($producto);
-        return redirect()
-            ->route("vender.index");
+        $this->calcularTotales();
+        return view("vender.vender",
+            [
+                "total" => $this->total,
+                "bultos" => $this->bultos,
+                "clientes" => Cliente::all(),
+            ]);
     }
     
     public function agregarFiambre(Request $request)
@@ -167,8 +185,13 @@ class VenderController extends Controller
         }
         $producto->precio_venta = (float)$importe;
         $this->agregarProductoACarrito($producto);
-        return redirect()
-            ->route("vender.index");
+        $this->calcularTotales();
+        return view("vender.vender",
+            [
+                "total" => $this->total,
+                "bultos" => $this->bultos,
+                "clientes" => Cliente::all(),
+            ]);
     }
 
     public function agregarProductoVenta(Request $request)
@@ -181,11 +204,16 @@ class VenderController extends Controller
         if (!$producto) {
             return redirect()
                 ->route("vender.index")
-                ->with("mensaje", "Producto no encontrado");
+                ->with("mensaje", "Producto no encontrado en el catálogo.");
         }
         $this->agregarProductoACarrito($producto);
-        return redirect()
-            ->route("vender.index");
+        $this->calcularTotales();
+        return view("vender.vender",
+            [
+                "total" => $this->total,
+                "bultos" => $this->bultos,
+                "clientes" => Cliente::all(),
+            ]);
     }
 
     private function agregarProductoACarrito($producto)
@@ -197,15 +225,16 @@ class VenderController extends Controller
 //                    "tipo" => "danger"
 //                ]);
 //        }
-        $productos = $this->obtenerProductos();
+        $productos = $this->obtenerProductosCarrito();
         $posibleIndice = -1;
         //Varios / Carniceria /Fiambre
         if ($producto->codigo_barras != "1" && $producto->codigo_barras != "2" && $producto->codigo_barras != "3") {
-            $posibleIndice = $this->buscarIndiceDeProducto($producto->codigo_barras, $productos);
+            $posibleIndice = $this->buscarIndiceDeProducto($producto->codigo_barras, $productos);   
         }
-        // Es decir, producto no fue encontrado
+        // Es decir, producto no fue encontrado, pero es 1, 2 o 3
         if ($posibleIndice === -1) {
             $producto->cantidad = 1;
+            $producto->indice = count($productos);
             array_push($productos, $producto);
         } else {
 //            if ($productos[$posibleIndice]->cantidad + 1 > $producto->existencia) {
@@ -222,12 +251,24 @@ class VenderController extends Controller
 
     private function buscarIndiceDeProducto(string $codigo, array &$productos)
     {
-        foreach ($productos as $indice => $producto) {
+        foreach ($productos as $ix => $producto) {
             if ($producto->codigo_barras === $codigo) {
-                return $indice;
+                return $ix;
             }
         }
         return -1;
+    }
+    
+    private function quitarProductoDelCarrito(string $indice, array &$productos)
+    {
+        foreach ($productos as $ix => $producto) {
+            if ($producto->indice === (int)$indice) {
+                array_splice($productos, $ix, 1);
+                VentasServiceProvider::guardarProductos($productos);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -237,17 +278,21 @@ class VenderController extends Controller
      */
     public function index()
     {
-        $total = 0;
-        $bultos = 0;
-        foreach ($this->obtenerProductos() as $producto) {
-            $total += $producto->cantidad * $producto->precio_venta;
-            $bultos += $producto->cantidad;
-        }
+        $this->calcularTotales();
         return view("vender.vender",
             [
-                "total" => $total,
-                "bultos" => $bultos,
+                "total" => $this->total,
+                "bultos" => $this->bultos,
                 "clientes" => Cliente::all(),
             ]);
+    }
+    
+    private function calcularTotales() {
+        $this->total = 0;
+        $this->bultos = 0;
+        foreach ($this->obtenerProductosCarrito() as $producto) {
+            $this->total += $producto->cantidad * $producto->precio_venta;
+            $this->bultos += $producto->cantidad;
+        }
     }
 }
