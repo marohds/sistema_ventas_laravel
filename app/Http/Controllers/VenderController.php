@@ -101,13 +101,7 @@ class VenderController extends Controller
         $productos = $this->obtenerProductosCarrito();
         //array_splice($productos, $indice, 1);
         $this->quitarProductoDelCarrito($indice, $productos);
-        $this->calcularTotales();
-        return view("vender.vender",
-            [
-                "total" => $this->total,
-                "bultos" => $this->bultos,
-                "clientes" => Cliente::all(),
-            ]);
+        return redirect()->action([VenderController::class, 'index']);
     }
     
     public function agregarVarios(Request $request)
@@ -129,13 +123,7 @@ class VenderController extends Controller
         }
         $producto->precio_venta = (float)$importe;
         $this->agregarProductoACarrito($producto);
-        $this->calcularTotales();
-        return view("vender.vender",
-            [
-                "total" => $this->total,
-                "bultos" => $this->bultos,
-                "clientes" => Cliente::all(),
-            ]);
+        return redirect()->action([VenderController::class, 'index']);
     }
     
     public function agregarCarniceria(Request $request)
@@ -157,13 +145,7 @@ class VenderController extends Controller
         }
         $producto->precio_venta = (float)$importe;
         $this->agregarProductoACarrito($producto);
-        $this->calcularTotales();
-        return view("vender.vender",
-            [
-                "total" => $this->total,
-                "bultos" => $this->bultos,
-                "clientes" => Cliente::all(),
-            ]);
+        return redirect()->action([VenderController::class, 'index']);
     }
     
     public function agregarFiambre(Request $request)
@@ -185,13 +167,7 @@ class VenderController extends Controller
         }
         $producto->precio_venta = (float)$importe;
         $this->agregarProductoACarrito($producto);
-        $this->calcularTotales();
-        return view("vender.vender",
-            [
-                "total" => $this->total,
-                "bultos" => $this->bultos,
-                "clientes" => Cliente::all(),
-            ]);
+        return redirect()->action([VenderController::class, 'index']);
     }
 
     public function agregarProductoVenta(Request $request)
@@ -207,13 +183,7 @@ class VenderController extends Controller
                 ->with("mensaje", "Producto no encontrado en el catálogo.");
         }
         $this->agregarProductoACarrito($producto);
-        $this->calcularTotales();
-        return view("vender.vender",
-            [
-                "total" => $this->total,
-                "bultos" => $this->bultos,
-                "clientes" => Cliente::all(),
-            ]);
+        return redirect()->action([VenderController::class, 'index']);
     }
 
     private function agregarProductoACarrito($producto)
